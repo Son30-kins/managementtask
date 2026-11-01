@@ -122,7 +122,16 @@ export function PreferencesForm({ timezone, settings }: { timezone: string; sett
             />
             {st.digest}
           </label>
-          {s.digest.enabled && (
+          <label className="flex items-center gap-3 text-sm font-semibold">
+            <input
+              type="checkbox"
+              checked={s.weeklyReport !== false}
+              onChange={(e) => setS({ ...s, weeklyReport: e.target.checked })}
+              className="h-4 w-4"
+            />
+            {st.weeklyReport}
+          </label>
+          {(s.digest.enabled || s.weeklyReport !== false) && (
             <Field label={st.digestAt} className="max-w-[10rem]">
               <Input type="time" value={s.digest.time} onChange={(e) => setS({ ...s, digest: { ...s.digest, time: e.target.value } })} />
             </Field>

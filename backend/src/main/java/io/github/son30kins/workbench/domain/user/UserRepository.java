@@ -36,6 +36,9 @@ public interface UserRepository {
 	 */
 	boolean claimDigest(UUID userId, LocalDate today);
 
+	/** Đánh dấu đã gửi báo cáo tuần hôm nay; false nếu instance khác đã gửi. */
+	boolean claimWeeklyReport(UUID userId, LocalDate today);
+
 	/** Tuần tự hoá việc tạo tài khoản (hai người đăng nhập cùng lúc không cùng thành admin đầu tiên). */
 	void lockForProvisioning();
 

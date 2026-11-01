@@ -15,6 +15,8 @@ export const userSettingsSchema = z.object({
   quietHours: z.object({ enabled: z.boolean(), start: hhmm, end: hhmm }),
   digest: z.object({ enabled: z.boolean(), time: hhmm }),
   overdueRepeatHours: z.number().int().min(1).max(24 * 7),
+  /** Báo cáo tuần sáng thứ 2 (thiếu = bật — cài đặt lưu trước khi có tính năng này) */
+  weeklyReport: z.boolean().optional(),
 });
 
 export type UserSettings = z.infer<typeof userSettingsSchema>;
@@ -29,6 +31,7 @@ export const DEFAULT_USER_SETTINGS: UserSettings = {
   quietHours: { enabled: true, start: "22:00", end: "07:00" },
   digest: { enabled: true, time: "08:00" },
   overdueRepeatHours: 24,
+  weeklyReport: true,
 };
 
 /** Đọc settings từ DB; thiếu hoặc sai thì dùng mặc định. */

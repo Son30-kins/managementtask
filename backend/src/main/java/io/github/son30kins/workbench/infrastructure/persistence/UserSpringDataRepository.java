@@ -34,6 +34,13 @@ interface UserSpringDataRepository extends JpaRepository<User, UUID> {
 			""")
 	int claimDigest(UUID userId, LocalDate today);
 
+	@Modifying
+	@Query("""
+			update User u set u.lastWeeklyReportOn = :today
+			where u.id = :userId and (u.lastWeeklyReportOn is null or u.lastWeeklyReportOn <> :today)
+			""")
+	int claimWeeklyReport(UUID userId, LocalDate today);
+
 	/** pg_advisory_xact_lock trả về void → bọc trong select để Hibernate đọc được kết quả. */
 	@Query(value = "select 1 from (select pg_advisory_xact_lock(72710302)) l", nativeQuery = true)
 	Integer advisoryLockProvisioning();

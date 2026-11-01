@@ -71,6 +71,11 @@ class UserRepositoryAdapter implements UserRepository {
 	}
 
 	@Override
+	public boolean claimWeeklyReport(UUID userId, LocalDate today) {
+		return jpa.claimWeeklyReport(userId, today) == 1;
+	}
+
+	@Override
 	public void lockForProvisioning() {
 		jpa.advisoryLockProvisioning();
 	}

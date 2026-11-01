@@ -62,6 +62,9 @@ public class User {
 
 	private LocalDate lastDigestOn;
 
+	/** Ngày (thứ 2, giờ địa phương) đã gửi báo cáo tuần gần nhất — chống gửi trùng. */
+	private LocalDate lastWeeklyReportOn;
+
 	/** SHA-256 của token trong link lịch iCal; null = chưa bật link. */
 	private String calendarTokenHash;
 
