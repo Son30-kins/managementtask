@@ -225,7 +225,11 @@ Mở trình duyệt vào **<http://localhost:3000>**.
 3. **Đổi ngôn ngữ:** nút **🌐 VI / EN / DE** ở góc trên, hoặc **Cài đặt → Ngôn ngữ**.
 4. **Kết nối Telegram** (nếu đã làm bước 5): **Cài đặt → Kết nối Telegram** → Telegram mở ra → bấm **Start** → quay
    lại app tải lại trang. Bấm **Gửi tin thử** để kiểm tra.
-5. **Lịch nhắc:** **Cài đặt** → chọn nhắc trước hạn bao lâu cho từng mức ưu tiên, giờ yên lặng, bản tin buổi sáng.
+5. **Lịch nhắc:** **Cài đặt** → chọn nhắc trước hạn bao lâu cho từng mức ưu tiên, giờ yên lặng, bản tin buổi sáng,
+   báo cáo tuần.
+6. **Xem hạn task trong Google / Apple Calendar:** **Cài đặt → Lịch iCal → Tạo link lịch** rồi dán link vào ứng
+   dụng lịch. Apple Calendar trên chính máy cài dùng được ngay; Google Calendar tải link từ Internet nên chỉ hoạt động
+   khi app chạy với tên miền công khai (mục 9.5).
 
 Lưu ý: địa chỉ `localhost` chỉ mở được trên **chính máy cài**. Muốn mở từ điện thoại hoặc máy khác, xem mục 9.5.
 
