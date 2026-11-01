@@ -150,7 +150,7 @@ export function RunTemplateForm({ templateId, fields }: { templateId: string; fi
   );
 }
 
-function FieldInput({
+export function FieldInput({
   field,
   value,
   error,

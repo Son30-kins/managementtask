@@ -185,6 +185,26 @@ export const de: Messages = {
     editTemplate: "Vorlage bearbeiten",
   },
 
+  schedule: {
+    button: "Nach Zeitplan ausführen",
+    intro: "Zur geplanten Zeit füllt die App das Formular mit den Werten unten aus und legt die Aufgaben an — du wirst in der App und über Telegram benachrichtigt.",
+    enabled: "Zeitplan aktiv",
+    repeat: "Wiederholen",
+    monthDay: "Tag im Monat",
+    time: "Um",
+    values: "Formularwerte",
+    runDay: "Ausführungstag +",
+    days: "Tage",
+    at: "um",
+    save: "Zeitplan speichern",
+    remove: "Zeitplan entfernen",
+    confirmRemove: "Den Zeitplan dieser Vorlage entfernen?",
+    summary: (rule, time) => `${rule} · ${time}`,
+    next: (when) => `Nächste Ausführung: ${when}`,
+    off: "Zeitplan ist aus",
+    failed: "Die letzte Ausführung ist fehlgeschlagen — Werte korrigieren und den Zeitplan wieder einschalten.",
+  },
+
   fieldTypes: {
     TEXT: "Text (einzeilig)",
     TEXTAREA: "Text (mehrzeilig)",

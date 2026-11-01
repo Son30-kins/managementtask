@@ -185,6 +185,26 @@ export const vi = {
     editTemplate: "Sửa form mẫu",
   },
 
+  schedule: {
+    button: "Tự chạy theo lịch",
+    intro: "Đến giờ, app tự điền form bằng các giá trị bên dưới và tạo task — bạn nhận thông báo trong app và qua Telegram.",
+    enabled: "Bật lịch",
+    repeat: "Lặp lại",
+    monthDay: "Ngày trong tháng",
+    time: "Lúc",
+    values: "Giá trị điền form",
+    runDay: "Ngày chạy +",
+    days: "ngày",
+    at: "lúc",
+    save: "Lưu lịch",
+    remove: "Xoá lịch",
+    confirmRemove: "Xoá lịch tự chạy của form mẫu này?",
+    summary: (rule: string, time: string) => `${rule} · ${time}`,
+    next: (when: string) => `Lần tới: ${when}`,
+    off: "Lịch đang tắt",
+    failed: "Lần chạy trước bị lỗi — sửa giá trị rồi bật lại lịch.",
+  },
+
   fieldTypes: {
     TEXT: "Chữ (1 dòng)",
     TEXTAREA: "Chữ (nhiều dòng)",

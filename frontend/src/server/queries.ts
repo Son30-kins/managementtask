@@ -49,17 +49,25 @@ export async function countTasks(): Promise<TaskCounts> {
   return (await apiGet<TaskCounts>("/api/tasks/counts")) ?? { all: 0, today: 0, overdue: 0, week: 0 };
 }
 
-function toTemplate(t: Json<Template>): Template {
-  return { ...t, createdAt: date(t.createdAt), updatedAt: date(t.updatedAt) };
+type TemplateJson = Omit<Json<Template>, "schedule"> & { schedule: Json<NonNullable<Template["schedule"]>> | null };
+
+function toTemplate(t: TemplateJson): Template {
+  const s = t.schedule;
+  return {
+    ...t,
+    createdAt: date(t.createdAt),
+    updatedAt: date(t.updatedAt),
+    schedule: s ? { ...s, nextRunAt: dateOrNull(s.nextRunAt), lastRunAt: dateOrNull(s.lastRunAt) } : null,
+  };
 }
 
 export async function listTemplates(): Promise<Template[]> {
-  return ((await apiGet<Json<Template>[]>("/api/templates")) ?? []).map(toTemplate);
+  return ((await apiGet<TemplateJson[]>("/api/templates")) ?? []).map(toTemplate);
 }
 
 export async function getTemplate(id: string): Promise<Template | null> {
   if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
-  const row = await apiGet<Json<Template>>(`/api/templates/${id}`);
+  const row = await apiGet<TemplateJson>(`/api/templates/${id}`);
   return row ? toTemplate(row) : null;
 }
 

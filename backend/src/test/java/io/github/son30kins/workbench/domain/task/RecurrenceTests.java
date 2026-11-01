@@ -3,6 +3,7 @@ package io.github.son30kins.workbench.domain.task;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Set;
 
@@ -85,6 +86,22 @@ class RecurrenceTests {
 		var weekly = new Recurrence(Frequency.WEEKLY, 1, null, null);
 		// Berlin đổi giờ ngày 25/10/2026
 		assertThat(next(weekly, "2026-10-19T08:00", "2026-10-19T09:00", BERLIN)).isEqualTo("2026-10-26T08:00");
+	}
+
+	@Test
+	void lanChayDauTien_choLichTuChay() {
+		var mondays = weekly(1, MONDAY);
+		// Chủ nhật 01/11 → thứ 2 02/11 lúc 08:00
+		assertThat(mondays.firstOccurrence(LocalTime.of(8, 0), VN, at("2026-11-01T10:00", VN)).atZone(VN).toLocalDateTime())
+			.isEqualTo("2026-11-02T08:00");
+		// Hằng ngày, đã qua giờ hôm nay → ngày mai
+		var daily = new Recurrence(Frequency.DAILY, 1, null, null);
+		assertThat(daily.firstOccurrence(LocalTime.of(8, 0), VN, at("2026-11-01T10:00", VN)).atZone(VN).toLocalDateTime())
+			.isEqualTo("2026-11-02T08:00");
+		// Ngày 15 hằng tháng
+		var monthly = new Recurrence(Frequency.MONTHLY, 1, null, 15);
+		assertThat(monthly.firstOccurrence(LocalTime.of(9, 0), VN, at("2026-11-20T10:00", VN)).atZone(VN).toLocalDateTime())
+			.isEqualTo("2026-12-15T09:00");
 	}
 
 }

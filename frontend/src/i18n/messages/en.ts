@@ -185,6 +185,26 @@ export const en: Messages = {
     editTemplate: "Edit template",
   },
 
+  schedule: {
+    button: "Run on a schedule",
+    intro: "At the scheduled time the app fills in the form with the values below and creates the tasks — you get notified in the app and on Telegram.",
+    enabled: "Schedule on",
+    repeat: "Repeat",
+    monthDay: "Day of the month",
+    time: "At",
+    values: "Form values",
+    runDay: "Run day +",
+    days: "days",
+    at: "at",
+    save: "Save schedule",
+    remove: "Remove schedule",
+    confirmRemove: "Remove this template's schedule?",
+    summary: (rule, time) => `${rule} · ${time}`,
+    next: (when) => `Next: ${when}`,
+    off: "Schedule is off",
+    failed: "The last run failed — fix the values, then turn the schedule back on.",
+  },
+
   fieldTypes: {
     TEXT: "Text (one line)",
     TEXTAREA: "Text (multiple lines)",
