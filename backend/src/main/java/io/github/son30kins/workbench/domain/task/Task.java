@@ -1,9 +1,11 @@
 package io.github.son30kins.workbench.domain.task;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
@@ -68,6 +70,10 @@ public class Task {
 
 	private Instant completedAt;
 
+	/** Quy tắc lặp lại; null = không lặp. Khi hoàn thành, quy tắc chuyển sang task kế tiếp. */
+	@JdbcTypeCode(SqlTypes.JSON)
+	private Recurrence recurrence;
+
 	@CreationTimestamp
 	private Instant createdAt;
 
@@ -95,6 +101,7 @@ public class Task {
 		this.dueAt = data.dueAt();
 		this.priority = data.priority();
 		this.tags = new ArrayList<>(data.tags());
+		this.recurrence = data.recurrence();
 		changeStatus(data.status(), now);
 		replaceSubtasks(data.subtasks());
 		return scheduleChanged;
@@ -115,6 +122,20 @@ public class Task {
 
 	public boolean isOpen() {
 		return TaskStatus.ACTIVE.contains(status);
+	}
+
+	/**
+	 * Task lặp lại vừa hoàn thành → dữ liệu cho lần kế tiếp (task con đặt lại chưa xong, quy tắc lặp chuyển theo).
+	 * Task này thôi lặp, nên mở lại rồi đánh dấu xong lần nữa không sinh bản trùng.
+	 */
+	public Optional<TaskData> nextOccurrence(ZoneId zone, Instant now) {
+		if (recurrence == null || dueAt == null || status != TaskStatus.DONE) {
+			return Optional.empty();
+		}
+		var next = new TaskData(title, description, recurrence.next(dueAt, zone, now), priority, TaskStatus.TODO, tags,
+				subtasks.stream().map(s -> new TaskData.SubtaskData(s.getTitle(), false)).toList(), recurrence);
+		recurrence = null;
+		return Optional.of(next);
 	}
 
 	public void linkTemplateRun(UUID runId, String templateName) {

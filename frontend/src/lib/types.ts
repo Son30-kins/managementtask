@@ -20,6 +20,17 @@ export type CurrentUser = {
 
 export type Subtask = { id: string; title: string; done: boolean; position: number };
 
+export const WEEKDAYS = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"] as const;
+export type Weekday = (typeof WEEKDAYS)[number];
+
+/** Quy tắc lặp lại (khớp record Recurrence của API). */
+export type Recurrence = {
+  frequency: "DAILY" | "WEEKLY" | "MONTHLY";
+  interval: number;
+  weekdays: Weekday[];
+  monthDay: number | null;
+};
+
 export type Task = {
   id: string;
   title: string;
@@ -34,6 +45,7 @@ export type Task = {
   createdAt: Date;
   updatedAt: Date;
   subtasks: Subtask[];
+  recurrence: Recurrence | null;
 };
 
 export type TaskCounts = { all: number; today: number; overdue: number; week: number };

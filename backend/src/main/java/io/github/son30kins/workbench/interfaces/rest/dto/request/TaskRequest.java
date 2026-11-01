@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Size;
 
 import io.github.son30kins.workbench.domain.shared.TimeZones;
 import io.github.son30kins.workbench.domain.task.Priority;
+import io.github.son30kins.workbench.domain.task.Recurrence;
 import io.github.son30kins.workbench.domain.task.TaskData;
 import io.github.son30kins.workbench.domain.task.TaskStatus;
 
@@ -21,7 +22,7 @@ import io.github.son30kins.workbench.domain.task.TaskStatus;
 public record TaskRequest(@NotBlank(message = "{validation.task.title}") @Size(max = 200) String title,
 		@Size(max = 5000) String description, LocalDateTime due, @NotNull Priority priority, @NotNull TaskStatus status,
 		@Size(max = 10) List<@NotNull @Size(max = 40) String> tags,
-		@Size(max = 50) List<@Valid @NotNull SubtaskItem> subtasks) {
+		@Size(max = 50) List<@Valid @NotNull SubtaskItem> subtasks, @Valid Recurrence recurrence) {
 
 	public record SubtaskItem(@Size(max = 200) String title, boolean done) {
 	}
@@ -31,7 +32,7 @@ public record TaskRequest(@NotBlank(message = "{validation.task.title}") @Size(m
 		var dueAt = due == null ? null : TimeZones.fromLocal(due, zone);
 		var items = subtasks == null ? List.<TaskData.SubtaskData>of()
 				: subtasks.stream().map(s -> new TaskData.SubtaskData(s.title(), s.done())).toList();
-		return new TaskData(title.trim(), description, dueAt, priority, status, tags, items);
+		return new TaskData(title.trim(), description, dueAt, priority, status, tags, items, recurrence);
 	}
 
 }

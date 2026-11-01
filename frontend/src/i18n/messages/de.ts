@@ -88,6 +88,27 @@ export const de: Messages = {
     filtering: "Gefiltert nach:",
   },
 
+  recurrence: {
+    label: "Wiederholen",
+    hint: "Beim Erledigen wird die nächste Aufgabe angelegt",
+    needsDue: "Wähle eine Frist, damit die Aufgabe wiederholt werden kann",
+    none: "Keine Wiederholung",
+    daily: "Täglich",
+    weekdays: "Werktags (Mo–Fr)",
+    weekly: "Wöchentlich",
+    monthly: "Monatlich",
+    custom: "Benutzerdefiniert…",
+    every: "Alle",
+    unit: "Einheit",
+    on: "An",
+    units: { DAILY: ["Tag", "Tage"], WEEKLY: ["Woche", "Wochen"], MONTHLY: ["Monat", "Monate"] },
+    dayNames: ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
+    sumDaily: (n) => (n === 1 ? "Täglich" : `Alle ${n} Tage`),
+    sumWeekdays: "Mo–Fr",
+    sumWeekly: (n, days) => `${n === 1 ? "Wöchentlich" : `Alle ${n} Wochen`}${days ? ` am ${days}` : ""}`,
+    sumMonthly: (n, day) => `${n === 1 ? "Monatlich" : `Alle ${n} Monate`}${day ? ` am ${day}.` : ""}`,
+  },
+
   board: {
     addTask: "Hinzufügen",
     dropHere: "Aufgaben hierher ziehen…",
