@@ -314,6 +314,7 @@ docker compose down -v     # gỡ app VÀ XOÁ HẾT dữ liệu — không lấ
 | Google báo **`Access blocked`** / *app is being tested* | Email bạn dùng chưa có trong **Audience → Test users** (bước 4.4) |
 | Trang đăng nhập báo **email không có trong danh sách** | Admin giới hạn email trong **Quản trị → Ai được đăng nhập** |
 | Cổng 3000 đã bị chiếm (`port is already allocated`) | Trong `.env` đổi `APP_PORT=3001` **và** `APP_URL=http://localhost:3001`, sửa redirect URI ở Google cho khớp, rồi `docker compose up -d` |
+| `up -d` báo **`dependency failed to start: container … is unhealthy`** | Máy chậm hoặc đang bận (game, nhiều ứng dụng) nên `api` khởi động lâu hơn thời gian chờ. Tải file `docker-compose.yml` mới nhất (bước 3) rồi chạy lại `docker compose up -d` — dữ liệu không mất |
 | `api` mãi không `(healthy)` | Xem nhật ký: `docker compose logs api --tail 50`. Lỗi mật khẩu database thường do đổi `POSTGRES_PASSWORD` sau lần chạy đầu — đặt lại giá trị cũ |
 | Bot Telegram không trả lời | Xem `docker compose logs api --tail 100`, tìm dòng có chữ *Telegram*. Sai token thì sửa `.env` rồi `docker compose up -d`; token đang chạy ở máy khác thì tạo bot mới |
 | Muốn xem nhật ký | `docker compose logs -f` (thoát: `Ctrl+C`) |
