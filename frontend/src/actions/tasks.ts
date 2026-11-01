@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import type { PriorityValue, StatusValue } from "@/core/priority";
+import type { Recurrence } from "@/lib/types";
 import { apiSend, type ApiResult } from "@/server/api";
 import { listTasks } from "@/server/queries";
 
@@ -15,6 +16,7 @@ export type TaskFormData = {
   status: StatusValue;
   tags?: string[];
   subtasks?: { title: string; done: boolean }[];
+  recurrence?: Recurrence | null;
 };
 
 function toBody(data: TaskFormData) {
@@ -26,6 +28,7 @@ function toBody(data: TaskFormData) {
     status: data.status,
     tags: (data.tags ?? []).map((t) => t.trim()).filter(Boolean),
     subtasks: (data.subtasks ?? []).filter((s) => s.title.trim()),
+    recurrence: data.recurrence ?? null,
   };
 }
 

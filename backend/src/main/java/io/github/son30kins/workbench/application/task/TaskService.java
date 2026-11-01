@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 
 import io.github.son30kins.workbench.application.reminder.ReminderService;
 import io.github.son30kins.workbench.domain.shared.TimeZones;
+import io.github.son30kins.workbench.domain.shared.ValidationException;
+import io.github.son30kins.workbench.domain.shared.Violation;
 import io.github.son30kins.workbench.domain.task.SubtaskRepository;
 import io.github.son30kins.workbench.domain.task.Task;
 import io.github.son30kins.workbench.domain.task.TaskCounts;
@@ -65,7 +67,7 @@ public class TaskService {
 	/** Tạo task; {@code runId}/{@code templateName} khác null khi task sinh từ form mẫu. */
 	public Task create(UserContext owner, TaskData data, UUID runId, String templateName) {
 		var task = new Task(owner.id());
-		task.apply(data, clock.instant());
+		task.apply(normalize(data, owner), clock.instant());
 		if (runId != null) {
 			task.linkTemplateRun(runId, templateName);
 		}
@@ -76,9 +78,10 @@ public class TaskService {
 
 	public Optional<Task> update(UserContext owner, UUID taskId, TaskData data) {
 		return tasks.findOwned(taskId, owner.id()).map(task -> {
-			if (task.apply(data, clock.instant())) {
+			if (task.apply(normalize(data, owner), clock.instant())) {
 				reminders.reschedule(task, owner);
 			}
+			spawnNextOccurrence(owner, task);
 			return task;
 		});
 	}
@@ -96,8 +99,27 @@ public class TaskService {
 			else if (previous.isClosed()) {
 				reminders.reschedule(task, owner);
 			}
+			spawnNextOccurrence(owner, task);
 			return task;
 		});
+	}
+
+	/** Task lặp lại vừa hoàn thành → tạo lần kế tiếp (cùng nguồn form mẫu nếu có). */
+	private void spawnNextOccurrence(UserContext owner, Task done) {
+		done.nextOccurrence(owner.zone(), clock.instant())
+			.ifPresent(next -> create(owner, next, done.getTemplateRunId(), done.getTemplateName()));
+	}
+
+	/** Lặp lại cần có hạn chót làm mốc; lặp hằng tháng ghi lại ngày trong tháng của hạn. */
+	private static TaskData normalize(TaskData data, UserContext owner) {
+		if (data.recurrence() == null) {
+			return data;
+		}
+		if (data.dueAt() == null) {
+			throw new ValidationException(List.of(Violation.of("due", "error.task.recurrenceNeedsDue")));
+		}
+		return new TaskData(data.title(), data.description(), data.dueAt(), data.priority(), data.status(), data.tags(),
+				data.subtasks(), data.recurrence().anchoredTo(data.dueAt(), owner.zone()));
 	}
 
 	public boolean delete(UserContext owner, UUID taskId) {

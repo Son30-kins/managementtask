@@ -8,7 +8,7 @@ import java.util.List;
  * Dùng chung cho API, form mẫu và test.
  */
 public record TaskData(String title, String description, Instant dueAt, Priority priority, TaskStatus status,
-		List<String> tags, List<SubtaskData> subtasks) {
+		List<String> tags, List<SubtaskData> subtasks, Recurrence recurrence) {
 
 	public record SubtaskData(String title, boolean done) {
 	}
@@ -23,6 +23,12 @@ public record TaskData(String title, String description, Instant dueAt, Priority
 					.filter(s -> s.title() != null && !s.title().isBlank())
 					.map(s -> new SubtaskData(s.title().trim(), s.done()))
 					.toList();
+	}
+
+	/** Task không lặp lại. */
+	public TaskData(String title, String description, Instant dueAt, Priority priority, TaskStatus status,
+			List<String> tags, List<SubtaskData> subtasks) {
+		this(title, description, dueAt, priority, status, tags, subtasks, null);
 	}
 
 	public static TaskData of(String title, Instant dueAt, Priority priority) {

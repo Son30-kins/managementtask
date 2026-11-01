@@ -88,6 +88,27 @@ export const en: Messages = {
     filtering: "Filtered by:",
   },
 
+  recurrence: {
+    label: "Repeat",
+    hint: "Marking it done creates the next one",
+    needsDue: "Pick a due date to make the task repeat",
+    none: "Does not repeat",
+    daily: "Every day",
+    weekdays: "Every weekday (Mon–Fri)",
+    weekly: "Every week",
+    monthly: "Every month",
+    custom: "Custom…",
+    every: "Every",
+    unit: "Unit",
+    on: "On",
+    units: { DAILY: ["day", "days"], WEEKLY: ["week", "weeks"], MONTHLY: ["month", "months"] },
+    dayNames: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    sumDaily: (n) => (n === 1 ? "Every day" : `Every ${n} days`),
+    sumWeekdays: "Mon–Fri",
+    sumWeekly: (n, days) => `${n === 1 ? "Every week" : `Every ${n} weeks`}${days ? ` on ${days}` : ""}`,
+    sumMonthly: (n, day) => `${n === 1 ? "Every month" : `Every ${n} months`}${day ? ` on day ${day}` : ""}`,
+  },
+
   board: {
     addTask: "Add task",
     dropHere: "Drop tasks here…",

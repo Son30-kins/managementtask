@@ -5,6 +5,7 @@ import { useOptimistic, useTransition } from "react";
 import { toggleSubtaskAction } from "@/actions/tasks";
 import { useI18n } from "@/i18n/provider";
 import { cn } from "@/lib/cn";
+import { RecurrenceBadge } from "./recurrence";
 import { DueChip, PriorityBadge, ProgressBar, dueTone, type TaskDTO } from "./task-bits";
 
 /** Số task con hiện trên thẻ; còn lại xem trong chi tiết. */
@@ -129,7 +130,10 @@ export function TaskCard({
       )}
 
       <div className="flex items-center justify-between gap-2">
-        <DueChip task={task} tz={tz} now={now} />
+        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+          <DueChip task={task} tz={tz} now={now} />
+          <RecurrenceBadge recurrence={task.recurrence} />
+        </div>
         {task.tags.length > 0 && (
           <span className="truncate text-xs text-fg-2" title={task.tags.join(", ")}>
             #{task.tags.slice(0, 2).join(" #")}

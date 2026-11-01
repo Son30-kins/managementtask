@@ -6,6 +6,7 @@ import { moveTaskAction } from "@/actions/tasks";
 import { EmptyState } from "@/components/cats";
 import { useI18n } from "@/i18n/provider";
 import { cn } from "@/lib/cn";
+import { RecurrenceBadge } from "./recurrence";
 import { DueChip, PriorityBadge, type TaskDTO } from "./task-bits";
 import { useTaskDialog } from "./task-dialog";
 
@@ -61,6 +62,7 @@ export function TaskTable({ tasks, tz, now }: { tasks: TaskDTO[]; tz: string; no
                     {(task.templateName || task.tags.length > 0) && (
                       <span className="block text-xs text-fg-2">{task.templateName ?? `#${task.tags.join(" #")}`}</span>
                     )}
+                    <RecurrenceBadge recurrence={task.recurrence} className="mt-0.5" />
                   </button>
                 </td>
                 <td className="px-4 py-3">

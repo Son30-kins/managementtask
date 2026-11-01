@@ -87,6 +87,28 @@ export const vi = {
     filtering: "Đang lọc:",
   },
 
+  recurrence: {
+    label: "Lặp lại",
+    hint: "Đánh dấu xong thì tự tạo lần kế tiếp",
+    needsDue: "Chọn hạn chót để task lặp lại",
+    none: "Không lặp",
+    daily: "Hằng ngày",
+    weekdays: "Ngày làm việc (T2–T6)",
+    weekly: "Hằng tuần",
+    monthly: "Hằng tháng",
+    custom: "Tuỳ chỉnh…",
+    every: "Mỗi",
+    unit: "Đơn vị",
+    on: "Vào các ngày",
+    // Đơn vị sau ô số trong "Tuỳ chỉnh" ("Mỗi [2] tuần"): [số ít, số nhiều]
+    units: { DAILY: ["ngày", "ngày"], WEEKLY: ["tuần", "tuần"], MONTHLY: ["tháng", "tháng"] },
+    dayNames: ["T2", "T3", "T4", "T5", "T6", "T7", "CN"],
+    sumDaily: (n: number) => (n === 1 ? "Hằng ngày" : `Mỗi ${n} ngày`),
+    sumWeekdays: "T2–T6",
+    sumWeekly: (n: number, days: string) => `${n === 1 ? "Hằng tuần" : `Mỗi ${n} tuần`}${days ? ` vào ${days}` : ""}`,
+    sumMonthly: (n: number, day: number | null) => `${n === 1 ? "Hằng tháng" : `Mỗi ${n} tháng`}${day ? ` ngày ${day}` : ""}`,
+  },
+
   board: {
     addTask: "Thêm task",
     dropHere: "Kéo task vào đây…",

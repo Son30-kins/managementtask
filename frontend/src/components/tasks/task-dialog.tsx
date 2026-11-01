@@ -11,7 +11,9 @@ import { getMessages } from "@/i18n";
 import { DEFAULT_LOCALE } from "@/i18n/config";
 import { useI18n } from "@/i18n/provider";
 import { cn } from "@/lib/cn";
+import { RecurrencePicker } from "./recurrence";
 import type { TaskDTO } from "./task-bits";
+import type { Recurrence } from "@/lib/types";
 
 type DialogState = { mode: "new"; status: StatusValue } | { mode: "edit"; task: TaskDTO } | null;
 
@@ -53,6 +55,7 @@ function TaskForm({ state, tz, onDone }: { state: NonNullable<DialogState>; tz: 
   const [priority, setPriority] = useState<PriorityValue>(task?.priority ?? "MEDIUM");
   const [status, setStatus] = useState<StatusValue>(task?.status ?? (state.mode === "new" ? state.status : "TODO"));
   const [tags, setTags] = useState((task?.tags ?? []).join(", "));
+  const [recurrence, setRecurrence] = useState<Recurrence | null>(task?.recurrence ?? null);
   const [subtasks, setSubtasks] = useState(task?.subtasks.map((s) => ({ title: s.title, done: s.done })) ?? []);
   const [newSub, setNewSub] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +69,10 @@ function TaskForm({ state, tz, onDone }: { state: NonNullable<DialogState>; tz: 
 
   function save(e: React.FormEvent) {
     e.preventDefault();
+    if (recurrence && !due) {
+      setError(t.recurrence.needsDue);
+      return;
+    }
     const data: TaskFormData = {
       title,
       description,
@@ -73,6 +80,7 @@ function TaskForm({ state, tz, onDone }: { state: NonNullable<DialogState>; tz: 
       priority,
       status,
       tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
+      recurrence,
       subtasks: newSub.trim() ? [...subtasks, { title: newSub.trim(), done: false }] : subtasks,
     };
     startTransition(async () => {
@@ -112,6 +120,10 @@ function TaskForm({ state, tz, onDone }: { state: NonNullable<DialogState>; tz: 
           </Select>
         </Field>
       </div>
+
+      <Field label={t.recurrence.label} hint={recurrence && !due ? undefined : t.recurrence.hint} error={recurrence && !due ? t.recurrence.needsDue : undefined}>
+        <RecurrencePicker value={recurrence} onChange={setRecurrence} />
+      </Field>
 
       <fieldset className="space-y-1.5">
         <legend className="text-[13px] font-semibold text-fg-2">{td.priority}</legend>
