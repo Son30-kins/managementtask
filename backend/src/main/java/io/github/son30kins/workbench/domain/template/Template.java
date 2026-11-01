@@ -66,8 +66,7 @@ public class Template {
 		return new TemplateDefinition(name, description, fields, rules);
 	}
 
-	/** Bản sao với tên "… (bản sao)", tối đa 100 ký tự. */
-	/** @param copySuffix hậu tố theo ngôn ngữ người dùng, ví dụ " (bản sao)" */
+	/** Bản sao với tên "… (bản sao)", tối đa 100 ký tự; {@code copySuffix} theo ngôn ngữ người dùng. */
 	public TemplateDefinition copyDefinition(String copySuffix) {
 		var copyName = name + copySuffix;
 		return new TemplateDefinition(copyName.length() > 100 ? copyName.substring(0, 100) : copyName, description,

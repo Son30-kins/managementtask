@@ -2,17 +2,23 @@ package io.github.son30kins.workbench.interfaces.rest;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 
 import io.github.son30kins.workbench.application.i18n.Translator;
+import io.github.son30kins.workbench.application.template.TemplateScheduleService;
 import io.github.son30kins.workbench.application.template.TemplateService;
 import io.github.son30kins.workbench.domain.shared.NotFoundException;
 import io.github.son30kins.workbench.domain.template.TemplateDefinition;
+import io.github.son30kins.workbench.domain.template.TemplateSchedule;
 import io.github.son30kins.workbench.infrastructure.security.CurrentUser;
 import io.github.son30kins.workbench.interfaces.rest.dto.request.FormValuesRequest;
+import io.github.son30kins.workbench.interfaces.rest.dto.request.ScheduleRequest;
+import io.github.son30kins.workbench.interfaces.rest.dto.response.ScheduleResponse;
 import io.github.son30kins.workbench.interfaces.rest.dto.response.TemplatePreviewResponse;
 import io.github.son30kins.workbench.interfaces.rest.dto.response.TemplateResponse;
 import io.github.son30kins.workbench.interfaces.rest.dto.response.TemplateRunHistoryResponse;
@@ -41,16 +47,41 @@ class TemplateController {
 
 	private final TemplateService templates;
 
+	private final TemplateScheduleService schedules;
+
 	private final Translator translator;
 
 	@GetMapping("/templates")
 	List<TemplateResponse> list(CurrentUser user) {
-		return templates.list(user.id()).stream().map(TemplateResponse::from).toList();
+		var byTemplate = schedules.list(user.id())
+			.stream()
+			.collect(Collectors.toMap(TemplateSchedule::getTemplateId, Function.identity()));
+		return templates.list(user.id())
+			.stream()
+			.map(t -> TemplateResponse.from(t, byTemplate.get(t.getId())))
+			.toList();
 	}
 
 	@GetMapping("/templates/{id}")
 	TemplateResponse get(CurrentUser user, @PathVariable UUID id) {
-		return templates.get(user.id(), id).map(TemplateResponse::from).orElseThrow(TemplateController::notFound);
+		var schedule = schedules.get(user.id(), id).orElse(null);
+		return templates.get(user.id(), id)
+			.map(t -> TemplateResponse.from(t, schedule))
+			.orElseThrow(TemplateController::notFound);
+	}
+
+	/** Đặt / đổi lịch tự chạy (giá trị form được kiểm tra ngay). */
+	@PutMapping("/templates/{id}/schedule")
+	ScheduleResponse saveSchedule(CurrentUser user, @PathVariable UUID id, @Valid @RequestBody ScheduleRequest request) {
+		return schedules.save(user.context(), id, request.toInput())
+			.map(ScheduleResponse::from)
+			.orElseThrow(TemplateController::notFound);
+	}
+
+	@DeleteMapping("/templates/{id}/schedule")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	void deleteSchedule(CurrentUser user, @PathVariable UUID id) {
+		schedules.delete(user.id(), id);
 	}
 
 	@PostMapping("/templates")

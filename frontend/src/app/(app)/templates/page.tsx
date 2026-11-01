@@ -2,6 +2,7 @@ import { FileStack, Play } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { EmptyState } from "@/components/cats";
+import { ScheduleSummary } from "@/components/templates/schedule";
 import { TemplateCardActions } from "@/components/templates/template-card-actions";
 import { Card, PageHeader } from "@/components/ui";
 import { formatInTz } from "@/core/time";
@@ -46,6 +47,7 @@ export default async function TemplatesPage() {
               <h2 className="text-lg font-bold">{tpl.name}</h2>
               {tpl.description && <p className="mt-1 text-sm text-fg-2">{tpl.description}</p>}
               <p className="mt-3 text-[13px] text-fg-2">{t.templates.stats(tpl.fields.length, tpl.rules.length)}</p>
+              {tpl.schedule && <ScheduleSummary schedule={tpl.schedule} tz={user.timezone} className="mt-2" />}
               <div className="mt-auto pt-5">
                 <Link
                   href={`/templates/${tpl.id}/run`}

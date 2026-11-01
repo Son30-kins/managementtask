@@ -2,7 +2,9 @@ package io.github.son30kins.workbench.domain.task;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.EnumSet;
@@ -57,6 +59,30 @@ public record Recurrence(@NotNull Frequency frequency, @Min(1) @Max(365) int int
 			}
 		}
 		throw new IllegalStateException("Recurrence did not reach " + notBefore);
+	}
+
+	/**
+	 * Lần đầu tiên khớp quy tắc, lúc {@code time} trên đồng hồ, sau {@code after} — dùng cho lịch tự chạy (chưa có mốc
+	 * hạn chót). Hằng tuần cần chọn thứ (rỗng = mọi ngày), hằng tháng cần ngày trong tháng.
+	 */
+	public Instant firstOccurrence(LocalTime time, ZoneId zone, Instant after) {
+		var start = after.atZone(zone).toLocalDate();
+		for (int i = 0; i < 800; i++) {
+			var day = start.plusDays(i);
+			var at = TimeZones.fromLocal(day, time, zone);
+			if (matches(day) && at.isAfter(after)) {
+				return at;
+			}
+		}
+		throw new IllegalStateException("No occurrence after " + after);
+	}
+
+	private boolean matches(LocalDate day) {
+		return switch (frequency) {
+			case DAILY -> true;
+			case WEEKLY -> weekdays.isEmpty() || weekdays.contains(day.getDayOfWeek());
+			case MONTHLY -> day.getDayOfMonth() == Math.min(monthDay == null ? 1 : monthDay, day.lengthOfMonth());
+		};
 	}
 
 	private LocalDateTime step(LocalDateTime from, ZoneId zone, Instant due) {

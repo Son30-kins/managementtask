@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { TemplateInput } from "@/core/template-schema";
 import { formatInTz } from "@/core/time";
-import type { PlannedTask } from "@/lib/types";
+import type { PlannedTask, Recurrence } from "@/lib/types";
 import { apiSend } from "@/server/api";
 import { getI18n } from "@/i18n/server";
 import { requireUser } from "@/server/session";
@@ -80,4 +80,26 @@ export async function runTemplateAction(templateId: string, values: Values): Pro
   if (!res.ok) return { ok: false, errors: res.error.fieldErrors, message: res.error.message };
   revalidatePath("/", "layout");
   return { ok: true, count: res.data.count };
+}
+
+export type ScheduleInput = {
+  enabled: boolean;
+  recurrence: Recurrence;
+  time: string;
+  values: Record<string, string | boolean>;
+};
+
+export type ScheduleActionResult = { ok: true } | { ok: false; message: string; errors: Record<string, string> };
+
+/** Đặt / đổi lịch tự chạy. API kiểm tra giá trị form ngay và trả lỗi theo mã trường. */
+export async function saveScheduleAction(templateId: string, input: ScheduleInput): Promise<ScheduleActionResult> {
+  const res = await apiSend("PUT", `/api/templates/${encodeURIComponent(templateId)}/schedule`, input);
+  if (!res.ok) return { ok: false, message: res.error.message, errors: res.error.fieldErrors };
+  revalidatePath("/templates", "layout");
+  return { ok: true };
+}
+
+export async function deleteScheduleAction(templateId: string) {
+  await apiSend("DELETE", `/api/templates/${encodeURIComponent(templateId)}/schedule`);
+  revalidatePath("/templates", "layout");
 }

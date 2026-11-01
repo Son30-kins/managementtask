@@ -50,6 +50,17 @@ export type Task = {
 
 export type TaskCounts = { all: number; today: number; overdue: number; week: number };
 
+/** Lịch tự chạy của form mẫu. Giá trị trường ngày: "+4" / "+4T17:00" (so với ngày chạy). */
+export type TemplateSchedule = {
+  enabled: boolean;
+  recurrence: Recurrence;
+  time: string;
+  values: Record<string, string | boolean>;
+  nextRunAt: Date | null;
+  lastRunAt: Date | null;
+  lastError: string | null;
+};
+
 export type Template = {
   id: string;
   name: string;
@@ -58,6 +69,7 @@ export type Template = {
   rules: TemplateRule[];
   createdAt: Date;
   updatedAt: Date;
+  schedule: TemplateSchedule | null;
 };
 
 export type TemplateRun = { id: string; templateId: string | null; templateName: string; taskCount: number; createdAt: Date };
