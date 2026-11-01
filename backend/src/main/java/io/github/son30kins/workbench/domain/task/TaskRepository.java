@@ -1,6 +1,7 @@
 package io.github.son30kins.workbench.domain.task;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,5 +35,17 @@ public interface TaskRepository {
 
 	/** Số task của từng người dùng — trang quản trị. */
 	Map<UUID, Long> countByUser();
+
+	// ===== Thống kê (tuần bắt đầu thứ 2 theo múi giờ zone) =====
+
+	List<TaskStatistics.WeekCount> completedByWeek(UUID userId, ZoneId zone, Instant from);
+
+	List<TaskStatistics.WeekCount> createdByWeek(UUID userId, ZoneId zone, Instant from);
+
+	List<TaskStatistics.PriorityCount> openByPriority(UUID userId, Instant now);
+
+	TaskStatistics.CompletionCount completedBetween(UUID userId, Instant from, Instant to);
+
+	long countCreatedBetween(UUID userId, Instant from, Instant to);
 
 }

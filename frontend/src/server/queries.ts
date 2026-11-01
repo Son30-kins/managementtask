@@ -1,5 +1,6 @@
 // Đọc dữ liệu từ API cho Server Component. Chuỗi ngày ISO → Date.
 import "server-only";
+import type { PriorityValue } from "@/core/priority";
 import type {
   AccessPolicy,
   AdminStatus,
@@ -49,6 +50,20 @@ export async function getTask(id: string): Promise<Task | null> {
 export async function listCalendarTasks(from: string, to: string): Promise<Task[]> {
   const rows = await apiGet<Json<Task>[]>(`/api/tasks/calendar?from=${from}&to=${to}`);
   return (rows ?? []).map(toTask);
+}
+
+export type Stats = {
+  weeks: { start: string; onTime: number; late: number; created: number }[];
+  completed7: number;
+  completedPrev7: number;
+  onTimeRate30: number | null;
+  open: number;
+  overdue: number;
+  byPriority: { priority: PriorityValue; open: number; overdue: number }[];
+};
+
+export async function getStats(): Promise<Stats | null> {
+  return apiGet<Stats>("/api/stats");
 }
 
 export async function getCalendarFeedStatus(): Promise<{ enabled: boolean }> {

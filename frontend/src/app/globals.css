@@ -20,6 +20,9 @@
   --blush: #ffd6df;
   --calm: #3f63f0;
   --muted: #806569;
+  /* Màu dữ liệu biểu đồ (2 nhóm, đã kiểm chứng CVD + tương phản trên nền thẻ) */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
   --sidebar: #3b2a2f;
   color-scheme: light;
 }
@@ -41,6 +44,8 @@
   --blush: #5a3640;
   --calm: #8aa0ff;
   --muted: #b89ca2;
+  --series-1: #3987e5;
+  --series-2: #d95926;
   --sidebar: #1f1619;
   color-scheme: dark;
 }
@@ -63,6 +68,8 @@
   --color-brand: var(--brand);
   --color-blush: var(--blush);
   --color-calm: var(--calm);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
   --color-pink: #ff8fa6;
   --color-danger: #ff6b6b;
   --color-warning: #ffa048;

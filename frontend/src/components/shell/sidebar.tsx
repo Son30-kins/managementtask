@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays, FileStack, LayoutGrid, ListTodo, LogOut, Settings, ShieldCheck } from "lucide-react";
+import { CalendarDays, ChartColumn, FileStack, LayoutGrid, ListTodo, LogOut, Settings, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo, PawPrint } from "@/components/cats";
@@ -14,6 +14,7 @@ function navItems(t: Messages["nav"], isAdmin: boolean) {
     { href: "/", icon: LayoutGrid, label: t.board, short: t.boardShort },
     { href: "/list", icon: ListTodo, label: t.list, short: t.list },
     { href: "/calendar", icon: CalendarDays, label: t.calendar, short: t.calendar },
+    { href: "/stats", icon: ChartColumn, label: t.stats, short: t.stats },
     { href: "/templates", icon: FileStack, label: t.templates, short: t.templates },
     { href: "/settings", icon: Settings, label: t.settings, short: t.settings },
   ];

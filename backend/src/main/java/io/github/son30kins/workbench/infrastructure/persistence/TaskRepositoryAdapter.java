@@ -1,6 +1,8 @@
 package io.github.son30kins.workbench.infrastructure.persistence;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -11,6 +13,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 
 import io.github.son30kins.workbench.domain.task.Task;
+import io.github.son30kins.workbench.domain.task.TaskStatistics;
+import io.github.son30kins.workbench.domain.task.Priority;
 import io.github.son30kins.workbench.domain.task.TaskCounts;
 import io.github.son30kins.workbench.domain.task.TaskRepository;
 import io.github.son30kins.workbench.domain.task.TaskSearch;
@@ -92,6 +96,41 @@ class TaskRepositoryAdapter implements TaskRepository {
 			.stream()
 			.collect(Collectors.toMap(TaskSpringDataRepository.UserTaskCount::getUserId,
 					TaskSpringDataRepository.UserTaskCount::getTotal));
+	}
+
+	@Override
+	public List<TaskStatistics.WeekCount> completedByWeek(UUID userId, ZoneId zone, Instant from) {
+		return weeks(jpa.completedByWeek(userId, zone.getId(), from));
+	}
+
+	@Override
+	public List<TaskStatistics.WeekCount> createdByWeek(UUID userId, ZoneId zone, Instant from) {
+		return weeks(jpa.createdByWeek(userId, zone.getId(), from));
+	}
+
+	@Override
+	public List<TaskStatistics.PriorityCount> openByPriority(UUID userId, Instant now) {
+		return jpa.openByPriority(userId, now)
+			.stream()
+			.map(r -> new TaskStatistics.PriorityCount(Priority.valueOf(r.getPriority()), r.getOpen(), r.getOverdue()))
+			.toList();
+	}
+
+	@Override
+	public TaskStatistics.CompletionCount completedBetween(UUID userId, Instant from, Instant to) {
+		var row = jpa.completedBetween(userId, from, to);
+		return new TaskStatistics.CompletionCount(row.getTotal(), row.getWithDue(), row.getLate());
+	}
+
+	@Override
+	public long countCreatedBetween(UUID userId, Instant from, Instant to) {
+		return jpa.countByUserIdAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(userId, from, to);
+	}
+
+	private static List<TaskStatistics.WeekCount> weeks(List<TaskSpringDataRepository.WeekRow> rows) {
+		return rows.stream()
+			.map(r -> new TaskStatistics.WeekCount(LocalDate.parse(r.getWeek()), r.getTotal(), r.getLate()))
+			.toList();
 	}
 
 	private static Specification<Task> toSpecification(TaskSearch search) {

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import io.github.son30kins.workbench.application.reminder.DigestService;
 import io.github.son30kins.workbench.application.reminder.ReminderDeliveryService;
+import io.github.son30kins.workbench.application.stats.WeeklyReportService;
 import io.github.son30kins.workbench.application.template.TemplateScheduleService;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,6 +25,8 @@ class ScheduledJobs {
 	private final DigestService digests;
 
 	private final TemplateScheduleService templateSchedules;
+
+	private final WeeklyReportService weeklyReports;
 
 	@Scheduled(fixedDelayString = "${workbench.jobs.tick}", initialDelayString = "5s")
 	void deliverReminders() {
@@ -61,6 +64,19 @@ class ScheduledJobs {
 		}
 		catch (RuntimeException ex) {
 			log.error("Lỗi job lịch form mẫu", ex);
+		}
+	}
+
+	@Scheduled(fixedDelayString = "${workbench.jobs.tick}", initialDelayString = "35s")
+	void sendWeeklyReports() {
+		try {
+			int count = weeklyReports.sendDue();
+			if (count > 0) {
+				log.info("Đã gửi {} báo cáo tuần", count);
+			}
+		}
+		catch (RuntimeException ex) {
+			log.error("Lỗi job báo cáo tuần", ex);
 		}
 	}
 
