@@ -120,6 +120,11 @@ public class Task {
 		this.status = newStatus;
 	}
 
+	/** Đổi hạn chót (kéo task sang ngày khác trên trang Lịch). */
+	public void moveDue(Instant newDue) {
+		this.dueAt = newDue;
+	}
+
 	public boolean isOpen() {
 		return TaskStatus.ACTIVE.contains(status);
 	}

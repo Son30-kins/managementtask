@@ -8,6 +8,7 @@ import io.github.son30kins.workbench.domain.user.UserRepository;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -45,6 +46,8 @@ class SecurityConfig {
 		var appUrl = properties.appBaseUrl();
 		http.authorizeHttpRequests(auth -> auth
 			.requestMatchers("/actuator/health/**", "/error").permitAll()
+			// Link lịch iCal: ứng dụng lịch tải về không có phiên đăng nhập — token bí mật trong URL thay cho phiên
+			.requestMatchers(HttpMethod.GET, "/api/calendar/feed/*").permitAll()
 			.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 			.requestMatchers("/api/admin/**").hasRole("ADMIN")
 			.requestMatchers("/api/**").authenticated()

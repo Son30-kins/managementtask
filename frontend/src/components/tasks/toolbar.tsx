@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutGrid, ListTodo, Plus, X } from "lucide-react";
+import { CalendarDays, LayoutGrid, ListTodo, Plus, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useI18n } from "@/i18n/provider";
@@ -39,6 +39,7 @@ export function TasksToolbar() {
         <nav className="flex">
           {tab("/", <LayoutGrid size={18} />, t.toolbar.board)}
           {tab("/list", <ListTodo size={18} />, t.toolbar.list)}
+          {tab("/calendar", <CalendarDays size={18} />, t.nav.calendar)}
         </nav>
         <div className="flex items-center gap-2 pb-3">
           <button

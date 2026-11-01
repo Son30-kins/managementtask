@@ -45,6 +45,16 @@ export async function getTask(id: string): Promise<Task | null> {
   return row ? toTask(row) : null;
 }
 
+/** Trang Lịch: task có hạn trong các ngày [from, to] ("YYYY-MM-DD", theo múi giờ người dùng). */
+export async function listCalendarTasks(from: string, to: string): Promise<Task[]> {
+  const rows = await apiGet<Json<Task>[]>(`/api/tasks/calendar?from=${from}&to=${to}`);
+  return (rows ?? []).map(toTask);
+}
+
+export async function getCalendarFeedStatus(): Promise<{ enabled: boolean }> {
+  return (await apiGet<{ enabled: boolean }>("/api/calendar")) ?? { enabled: false };
+}
+
 export async function countTasks(): Promise<TaskCounts> {
   return (await apiGet<TaskCounts>("/api/tasks/counts")) ?? { all: 0, today: 0, overdue: 0, week: 0 };
 }

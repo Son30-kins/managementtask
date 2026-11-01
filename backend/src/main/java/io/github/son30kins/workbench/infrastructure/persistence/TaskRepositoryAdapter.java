@@ -33,6 +33,8 @@ class TaskRepositoryAdapter implements TaskRepository {
 
 	private static final Sort COMPLETED_ORDER = Sort.by(Sort.Order.desc("completedAt"));
 
+	private static final Sort DUE_ORDER = Sort.by(Sort.Order.asc("dueAt"), Sort.Order.asc("priorityRank"));
+
 	private final TaskSpringDataRepository jpa;
 
 	@Override
@@ -58,7 +60,11 @@ class TaskRepositoryAdapter implements TaskRepository {
 	@Override
 	public List<Task> search(TaskSearch search) {
 		var spec = toSpecification(search);
-		var sort = search.sort() == TaskSearch.Order.BOARD ? BOARD_ORDER : COMPLETED_ORDER;
+		var sort = switch (search.sort()) {
+			case BOARD -> BOARD_ORDER;
+			case RECENTLY_COMPLETED -> COMPLETED_ORDER;
+			case DUE -> DUE_ORDER;
+		};
 		if (search.limit() <= 0) {
 			return jpa.findAll(spec, sort);
 		}

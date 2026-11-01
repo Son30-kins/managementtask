@@ -15,9 +15,10 @@ import { RecurrencePicker } from "./recurrence";
 import type { TaskDTO } from "./task-bits";
 import type { Recurrence } from "@/lib/types";
 
-type DialogState = { mode: "new"; status: StatusValue } | { mode: "edit"; task: TaskDTO } | null;
+type DialogState = { mode: "new"; status: StatusValue; due?: string } | { mode: "edit"; task: TaskDTO } | null;
 
-const Ctx = createContext<{ openNew: (status?: StatusValue) => void; openEdit: (task: TaskDTO) => void } | null>(null);
+/** openNew(trạng thái, hạn "YYYY-MM-DDTHH:mm") — trang Lịch mở sẵn hạn của ngày được bấm. */
+const Ctx = createContext<{ openNew: (status?: StatusValue, due?: string) => void; openEdit: (task: TaskDTO) => void } | null>(null);
 
 export function useTaskDialog() {
   const ctx = use(Ctx);
@@ -36,7 +37,7 @@ export function TaskDialogProvider({ tz, children }: { tz: string; children: Rea
   };
 
   return (
-    <Ctx value={{ openNew: (status = "TODO") => open({ mode: "new", status }), openEdit: (task) => open({ mode: "edit", task }) }}>
+    <Ctx value={{ openNew: (status = "TODO", due) => open({ mode: "new", status, due }), openEdit: (task) => open({ mode: "edit", task }) }}>
       {children}
       <Modal open={state !== null} onClose={() => setState(null)} title={state?.mode === "edit" ? t.taskDialog.editTitle : t.taskDialog.newTitle}>
         {state && <TaskForm key={version} state={state} tz={tz} onDone={() => setState(null)} />}
@@ -51,7 +52,7 @@ function TaskForm({ state, tz, onDone }: { state: NonNullable<DialogState>; tz: 
   const task = state.mode === "edit" ? state.task : null;
   const [title, setTitle] = useState(task?.title ?? "");
   const [description, setDescription] = useState(task?.description ?? "");
-  const [due, setDue] = useState(task?.dueAt ? toLocalInputValue(new Date(task.dueAt), tz) : "");
+  const [due, setDue] = useState(task?.dueAt ? toLocalInputValue(new Date(task.dueAt), tz) : state.mode === "new" ? (state.due ?? "") : "");
   const [priority, setPriority] = useState<PriorityValue>(task?.priority ?? "MEDIUM");
   const [status, setStatus] = useState<StatusValue>(task?.status ?? (state.mode === "new" ? state.status : "TODO"));
   const [tags, setTags] = useState((task?.tags ?? []).join(", "));
