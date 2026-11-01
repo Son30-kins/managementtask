@@ -36,6 +36,11 @@ class UserRepositoryAdapter implements UserRepository {
 	}
 
 	@Override
+	public Optional<User> findByCalendarTokenHash(String tokenHash) {
+		return jpa.findByCalendarTokenHash(tokenHash);
+	}
+
+	@Override
 	public boolean existsByEmail(String email) {
 		return jpa.existsByEmailIgnoreCase(email);
 	}

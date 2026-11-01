@@ -50,6 +50,11 @@ export async function moveTaskAction(taskId: string, status: string): Promise<Ac
   return done(await apiSend("PATCH", `/api/tasks/${encodeURIComponent(taskId)}/status`, { status }));
 }
 
+/** Kéo task sang ngày khác trên Lịch: due = "YYYY-MM-DDTHH:mm" theo giờ của người dùng. */
+export async function moveDueAction(taskId: string, due: string): Promise<ActionResult> {
+  return done(await apiSend("PATCH", `/api/tasks/${encodeURIComponent(taskId)}/due`, { due }));
+}
+
 export async function deleteTaskAction(taskId: string): Promise<ActionResult> {
   return done(await apiSend("DELETE", `/api/tasks/${encodeURIComponent(taskId)}`));
 }

@@ -44,3 +44,16 @@ export async function signOutAction() {
   (await cookies()).delete(SESSION_COOKIE);
   redirect("/login");
 }
+
+/** Tạo link lịch iCal mới (link cũ hết hiệu lực). URL chỉ trả về đúng lần này. */
+export async function createCalendarLinkAction(): Promise<{ ok: true; url: string } | { ok: false; error: string }> {
+  const res = await apiSend<{ url: string }>("POST", "/api/calendar/link");
+  revalidatePath("/settings");
+  return res.ok ? { ok: true, url: res.data.url } : { ok: false, error: res.error.message };
+}
+
+export async function revokeCalendarLinkAction(): Promise<SimpleResult> {
+  const res = await apiSend("DELETE", "/api/calendar/link");
+  revalidatePath("/settings");
+  return res.ok ? { ok: true } : { ok: false, error: res.error.message };
+}

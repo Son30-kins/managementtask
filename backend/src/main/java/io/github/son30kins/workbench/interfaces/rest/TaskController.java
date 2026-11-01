@@ -1,14 +1,20 @@
 package io.github.son30kins.workbench.interfaces.rest;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import lombok.RequiredArgsConstructor;
 
 import io.github.son30kins.workbench.application.task.TaskService;
+import io.github.son30kins.workbench.domain.shared.DomainException;
 import io.github.son30kins.workbench.domain.shared.NotFoundException;
+import io.github.son30kins.workbench.domain.shared.TimeZones;
 import io.github.son30kins.workbench.domain.task.TaskCounts;
 import io.github.son30kins.workbench.domain.task.TaskView;
 import io.github.son30kins.workbench.infrastructure.security.CurrentUser;
@@ -42,6 +48,27 @@ class TaskController {
 	List<TaskResponse> list(CurrentUser user, @RequestParam(required = false) String view,
 			@RequestParam(required = false) String q) {
 		return tasks.list(user.context(), TaskView.parse(view), q).stream().map(TaskResponse::from).toList();
+	}
+
+	/** Trang Lịch: task có hạn trong [from, to] (ngày theo múi giờ người dùng, tối đa 62 ngày). */
+	@GetMapping("/tasks/calendar")
+	List<TaskResponse> calendar(CurrentUser user, @RequestParam LocalDate from, @RequestParam LocalDate to) {
+		if (to.isBefore(from) || ChronoUnit.DAYS.between(from, to) > 62) {
+			throw new DomainException("error.validation");
+		}
+		return tasks.calendar(user.context(), from, to).stream().map(TaskResponse::from).toList();
+	}
+
+	/** Kéo task sang ngày khác: {"due": "2026-11-05T17:00"} theo giờ của người dùng. */
+	@PatchMapping("/tasks/{id}/due")
+	TaskResponse moveDue(CurrentUser user, @PathVariable UUID id, @Valid @RequestBody DueRequest request) {
+		return tasks.moveDue(user.context(), id, TimeZones.fromLocal(request.due(), user.zone()))
+			.map(TaskResponse::from)
+			.orElseThrow(TaskController::notFound);
+	}
+
+	/** Body PATCH /api/tasks/{id}/due. */
+	record DueRequest(@NotNull LocalDateTime due) {
 	}
 
 	@GetMapping("/tasks/counts")

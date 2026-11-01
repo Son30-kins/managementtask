@@ -2,7 +2,10 @@ package io.github.son30kins.workbench.application.task;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,6 +20,7 @@ import io.github.son30kins.workbench.domain.task.SubtaskRepository;
 import io.github.son30kins.workbench.domain.task.Task;
 import io.github.son30kins.workbench.domain.task.TaskCounts;
 import io.github.son30kins.workbench.domain.task.TaskData;
+import io.github.son30kins.workbench.domain.task.TaskSearch;
 import io.github.son30kins.workbench.domain.task.TaskRepository;
 import io.github.son30kins.workbench.domain.task.TaskStatus;
 import io.github.son30kins.workbench.domain.task.TaskView;
@@ -36,6 +40,9 @@ public class TaskService {
 
 	/** Cột "Hoàn thành" chỉ hiện 50 task xong gần nhất. */
 	private static final int DONE_LIMIT = 50;
+
+	/** Một màn hình lịch (tối đa 6 tuần) — đủ rộng, vẫn chặn trường hợp bất thường. */
+	private static final int CALENDAR_LIMIT = 1000;
 
 	private final TaskRepository tasks;
 
@@ -120,6 +127,27 @@ public class TaskService {
 		}
 		return new TaskData(data.title(), data.description(), data.dueAt(), data.priority(), data.status(), data.tags(),
 				data.subtasks(), data.recurrence().anchoredTo(data.dueAt(), owner.zone()));
+	}
+
+	/** Task có hạn trong các ngày [from, to] (theo lịch địa phương), cả việc đã xong — trang Lịch. */
+	@Transactional(readOnly = true)
+	public List<Task> calendar(UserContext owner, LocalDate from, LocalDate to) {
+		var start = TimeZones.fromLocal(from, LocalTime.MIDNIGHT, owner.zone());
+		var end = TimeZones.fromLocal(to.plusDays(1), LocalTime.MIDNIGHT, owner.zone());
+		var statuses = EnumSet.copyOf(TaskStatus.ACTIVE);
+		statuses.add(TaskStatus.DONE);
+		return tasks.search(new TaskSearch(owner.id(), start, end, statuses, null, CALENDAR_LIMIT, TaskSearch.Order.DUE));
+	}
+
+	/** Đổi hạn chót (kéo thả trên Lịch) rồi tính lại lịch nhắc. */
+	public Optional<Task> moveDue(UserContext owner, UUID taskId, Instant due) {
+		return tasks.findOwned(taskId, owner.id()).map(task -> {
+			task.moveDue(due);
+			if (task.isOpen()) {
+				reminders.reschedule(task, owner);
+			}
+			return task;
+		});
 	}
 
 	public boolean delete(UserContext owner, UUID taskId) {

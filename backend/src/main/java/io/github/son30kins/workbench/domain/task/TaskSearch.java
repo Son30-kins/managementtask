@@ -22,7 +22,9 @@ public record TaskSearch(UUID userId, Instant dueFrom, Instant dueBefore, Set<Ta
 		/** Ưu tiên cao trước, rồi hạn gần trước (không hạn xếp cuối), rồi mới tạo trước. */
 		BOARD,
 		/** Hoàn thành gần nhất trước. */
-		RECENTLY_COMPLETED
+		RECENTLY_COMPLETED,
+		/** Hạn sớm trước — trang Lịch. */
+		DUE
 
 	}
 

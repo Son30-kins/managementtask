@@ -17,6 +17,8 @@ interface UserSpringDataRepository extends JpaRepository<User, UUID> {
 
 	Optional<User> findByGoogleSubject(String googleSubject);
 
+	Optional<User> findByCalendarTokenHash(String calendarTokenHash);
+
 	boolean existsByEmailIgnoreCase(String email);
 
 	long countByRole(Role role);

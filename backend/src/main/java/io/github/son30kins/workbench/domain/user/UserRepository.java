@@ -17,6 +17,8 @@ public interface UserRepository {
 
 	Optional<User> findByGoogleSubject(String googleSubject);
 
+	Optional<User> findByCalendarTokenHash(String tokenHash);
+
 	boolean existsByEmail(String email);
 
 	long count();

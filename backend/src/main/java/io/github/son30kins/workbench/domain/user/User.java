@@ -62,6 +62,9 @@ public class User {
 
 	private LocalDate lastDigestOn;
 
+	/** SHA-256 của token trong link lịch iCal; null = chưa bật link. */
+	private String calendarTokenHash;
+
 	@CreationTimestamp
 	private Instant createdAt;
 
@@ -92,6 +95,11 @@ public class User {
 
 	public void changeLanguage(Language language) {
 		this.language = language;
+	}
+
+	/** Đặt / thu hồi link lịch iCal (chỉ lưu hash của token). */
+	public void changeCalendarToken(String tokenHash) {
+		this.calendarTokenHash = tokenHash;
 	}
 
 	public void ban() {
