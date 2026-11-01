@@ -2,6 +2,7 @@ package io.github.son30kins.workbench.application;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
 
@@ -41,7 +42,8 @@ class RecurringTaskTests {
 	@Test
 	void hoanThanh_taoLanKeTiep_motLanDuyNhat() {
 		var owner = fixtures.context(Role.USER);
-		var due = Instant.now().plus(Duration.ofDays(1));
+		// Làm tròn về giây: Postgres lưu tới micro giây, đồng hồ Linux có nano giây
+		var due = Instant.now().plus(Duration.ofDays(1)).truncatedTo(ChronoUnit.SECONDS);
 		var task = tasks.create(owner, weekly("Tưới cây", due));
 
 		tasks.changeStatus(owner, task.getId(), TaskStatus.DONE);
