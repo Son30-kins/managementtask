@@ -1,6 +1,6 @@
 # Workbench
 
-App quản lý công việc **tự host**: điền **form mẫu** → app **tự tạo cả chuỗi task** với hạn chót và mức ưu tiên, **nhắc việc qua Telegram** trước khi đến hạn. Đăng nhập bằng Google, nhiều người dùng, dữ liệu riêng từng người. Giao diện **Tiếng Việt / English / Deutsch**.
+App quản lý công việc **tự host**: điền **form mẫu** → app **tự tạo cả chuỗi task** với hạn chót và mức ưu tiên, **nhắc việc qua Telegram** trước khi đến hạn. Đăng nhập bằng Google, nhiều người dùng, dữ liệu riêng từng người. Task lặp lại, form mẫu tự chạy theo lịch, lịch tháng / tuần + link iCal, thống kê + báo cáo tuần. Giao diện **Tiếng Việt / English / Deutsch**.
 
 **Lần đầu cài?** Làm theo [hướng dẫn từng bước cho người mới](https://github.com/Son30-kins/workbench/blob/main/docs/huong-dan-cai-dat.md) — Windows / macOS / Linux, tạo khoá Google, bot Telegram, sao lưu, gỡ lỗi.
 

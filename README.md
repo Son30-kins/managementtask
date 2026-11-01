@@ -10,6 +10,10 @@ App quản lý công việc tự host bằng Docker: điền **form mẫu** → 
 - **Form mẫu → nhiều task**: tự định nghĩa form (chữ, số, ngày, lựa chọn, có/không) và quy tắc sinh task. Tiêu đề dùng biến `{{ten_truong}}`, hạn chót tính tương đối theo một trường ngày ("trước hạn nộp 2 ngày, lúc 17:00"), task có điều kiện, task con, nhãn. Xem trước rồi mới tạo.
 - **Bảng Kanban** kéo thả (Cần làm / Đang làm / Hoàn thành) và **danh sách**; lọc Hôm nay / Quá hạn / 7 ngày tới; tìm kiếm.
 - **4 mức ưu tiên** — Khẩn cấp, Cao, Trung bình, Thấp — mỗi mức có lịch nhắc riêng.
+- **Task lặp lại**: hằng ngày / ngày làm việc / hằng tuần (chọn thứ) / hằng tháng / mỗi N ngày-tuần-tháng; đánh dấu xong là có ngay lần kế tiếp.
+- **Form mẫu tự chạy theo lịch**: đặt lịch + giá trị sẵn (trường ngày tính theo ngày chạy, vd. "hạn nộp = ngày chạy + 4"), đến giờ app tự tạo task và báo bạn.
+- **Lịch tháng / tuần**: kéo task sang ngày khác để đổi hạn; **link iCal** để xem hạn task trong Google / Apple Calendar.
+- **Thống kê**: việc xong mỗi tuần (đúng hạn / trễ hạn), tỉ lệ đúng hạn, việc đang mở theo ưu tiên; **báo cáo tuần** sáng thứ 2 qua Telegram.
 - **Nhắc việc qua Telegram** với nút ✅ Xong / ⏰ Hoãn ngay trong tin nhắn; nhắc lại khi quá hạn; bản tin buổi sáng; giờ yên lặng.
 - **Chuông thông báo** trong app, **Sáng / Tối**, dùng được trên điện thoại.
 - **Mèo nhắc việc**: thỉnh thoảng một bé mèo hiện ở góc màn hình, bong bóng trên đầu nhắc task quá hạn / sắp đến hạn, bấm là mở task (bật / tắt trong Cài đặt).
