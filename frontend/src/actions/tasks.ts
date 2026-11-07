@@ -70,7 +70,10 @@ export type CatReminder = {
 };
 
 export async function catReminderAction(): Promise<CatReminder> {
-  const [overdue, week] = await Promise.all([listTasks({ view: "overdue" }), listTasks({ view: "week" })]);
+  // View "tuần này" có cả việc đã xong / đã huỷ — mèo chỉ nhắc việc còn mở
+  const open = (tasks: Awaited<ReturnType<typeof listTasks>>) =>
+    tasks.filter((t) => t.status === "TODO" || t.status === "IN_PROGRESS");
+  const [overdue, week] = (await Promise.all([listTasks({ view: "overdue" }), listTasks({ view: "week" })])).map(open);
   const now = Date.now();
   const soon = week.find((t) => t.dueAt && t.dueAt.getTime() >= now && t.dueAt.getTime() - now < 24 * 3_600_000);
   const pick = overdue[0] ?? soon;
