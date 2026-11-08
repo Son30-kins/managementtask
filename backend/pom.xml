@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>io.github.son30kins</groupId>
 	<artifactId>workbench-api</artifactId>
-	<version>0.5.0</version>
+	<version>0.5.1</version>
 	<name>workbench-api</name>
 	<description>Workbench — backend REST API (Spring Boot)</description>
 	<url>https://github.com/Son30-kins/workbench</url>

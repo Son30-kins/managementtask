@@ -35,3 +35,4 @@ App quản lý công việc tự host bằng Docker, nhiều người dùng (đ�
 - 2026-10-25: Bỏ chuyển động của mèo nhắc việc — chỉ hiện thẻ có hình mèo (ảnh tĩnh) kèm lời nhắc. Phát hành **v0.4.1**.
 - 2026-10-25: Lời nhắc của mèo chuyển thành bong bóng thoại trên đầu mèo. Phát hành **v0.4.2**.
 - 2026-11-01: **Task lặp lại**, **form mẫu tự chạy theo lịch**, **lịch tháng / tuần + link iCal**, **thống kê + báo cáo tuần** (Flyway V3–V6). Phát hành **v0.5.0**.
+- 2026-11-08: Sửa: mèo không còn nhắc task đã xong / đã huỷ; compose chờ `api` khởi động lâu hơn trên máy chậm. Phát hành **v0.5.1**.
