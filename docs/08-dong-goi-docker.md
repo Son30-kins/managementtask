@@ -60,7 +60,7 @@ File thật: [docker-compose.yml](../docker-compose.yml). Điểm chính:
 | `GOOGLE_CLIENT_SECRET` | ✅ | — | api | 🔒 Bí mật |
 | `TELEGRAM_BOT_TOKEN` | Nên có | — | api | 🔒 Bí mật. Thiếu thì vẫn chạy, nhắc việc chỉ hiện trong app |
 | `COOKIE_SECURE` | | `false` | api | `true` khi chạy HTTPS |
-| `APP_VERSION` | | `latest` | web, api | Ghim phiên bản, ví dụ `0.5.0` (2 image luôn cùng số phiên bản) |
+| `APP_VERSION` | | `latest` | web, api | Ghim phiên bản, ví dụ `0.5.1` (2 image luôn cùng số phiên bản) |
 | `APP_PORT` | | `3000` | web | Cổng trên máy |
 | `TZ` | | `Asia/Ho_Chi_Minh` | api | Múi giờ mặc định cho người dùng mới |
 | `ALLOWED_EMAILS` / `ALLOWED_DOMAINS` | | — | api | Giá trị ban đầu; admin sửa tiếp trong app |
